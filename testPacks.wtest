@@ -1,1 +1,97 @@
-// completar
+import packs.*
+
+describe "Test de los packs" {
+    
+
+   
+    
+    const packItalia = new PackInternacional ( duracionDias=8,precioBase=500000,coordinador="coordi1",paisDestino="Italia",cantidadEscalas=2)
+    const packMisiones = new PackNacional(duracionDias = 6,precioBase= 250000,coordinador="coordi2",provinciaDestino = "Misiones")
+    const beneficio1 = new Beneficio(tipo="SalaVip",costo = 50000,estaVigente=true)
+    const beneficio2 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=true)
+  test "Precio del Pack a cataratas sin beneficios" {
+    assert.equals(packMisiones.valorFinal(), 250000)
+  }
+  test "Precio del pack a cataratas con beneficio de sala vip" {
+    packMisiones.agregarBeneficio(beneficio1)
+    assert.equals(packMisiones.valorFinal(), 300000)
+  }
+  test "Precio del pack a cataratas con beneficio de translado y sala vip" {
+    packMisiones.agregarBeneficio(beneficio1)
+    packMisiones.agregarBeneficio(beneficio2)
+    assert.equals(packMisiones.valorFinal(), 350000)
+  }
+  test "Precio del pack a Italia sin beneficio" {
+   assert.equals(packItalia.valorFinal(),600000) 
+  }
+
+}
+
+
+describe "Test de los guias" {
+    const guiaJuan = new Guia(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 5,rol = "Guia")
+    const asistentePedro = new AsistenteLogistico(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 2,rol = "AsistenteLogistico")
+    const acompanianteLucas = new Acompaniante(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 1,rol = "Acompaniante")
+    
+  test "El guia juan con 21 viajes esta altamente calificado" {
+    assert.that(guiaJuan.esAltamenteCalificado())
+  }
+  test "El asistente Pedro con 2 anios de experiencia no esta calificado" {
+    assert.notThat(asistentePedro.esAltamenteCalificado())
+  }
+  test "Lucas el acompaniante esta calificado por tener mas de 20 viajes" {
+    assert.that(acompanianteLucas.esAltamenteCalificado())
+  }
+}
+
+describe "Test de los packs premium" {
+    const guiaJuan = new Guia(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 5,rol = "Guia")
+    const asistentePedro = new AsistenteLogistico(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 2,rol = "AsistenteLogistico")
+    const acompanianteLucas = new Acompaniante(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 1,rol = "Acompaniante")
+    const packItalia = new PackInternacional ( duracionDias=21,precioBase=500000,coordinador="coordi1",paisDestino="Italia",cantidadEscalas=0)
+    const packMisiones = new PackNacional(duracionDias = 11,precioBase= 250000,coordinador=guiaJuan,provinciaDestino = "Misiones")
+    const beneficio1 = new Beneficio(tipo="SalaVip",costo = 50000,estaVigente=true)
+    const beneficio2 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=true)
+  test "El pack a Misiones es Premium" {
+    assert.that(packMisiones.esPackPremium())
+  }
+  test "El pack a Italia es Premium" {
+    packItalia.cambiarALugarInteres()
+    assert.that(packItalia.esPackPremium())
+  }
+}
+
+describe "Test de los packs provinciales" {
+    const guiaJuan = new Guia(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 5,rol = "Guia")
+    const asistentePedro = new AsistenteLogistico(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 2,rol = "AsistenteLogistico")
+    const acompanianteLucas = new Acompaniante(cantidadViajes = 21,estaMotivado = true,aniosExperiencia = 1,rol = "Acompaniante")
+    const packAUshuaia = new PackProvincial ( provinciaDestino="Tierra del fuego",cantidadCiudadesAVisitar=6,duracionDias=21,precioBase=500000,coordinador="coordi1")
+    const packMisiones = new PackProvincial(duracionDias = 11,cantidadCiudadesAVisitar=5,precioBase= 250000,coordinador=guiaJuan,provinciaDestino = "Misiones")
+    const beneficio1 = new Beneficio(tipo="SalaVip",costo = 50000,estaVigente=true)
+    const beneficio2 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=true)
+    const beneficio3 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=true)
+    const beneficio4 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=false)
+    const beneficio5 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=false)
+    const beneficio6 = new Beneficio(tipo="Translado",costo = 50000,estaVigente=false)
+  test "El precio final del pack a Ushuaia siendo premium" {
+    packAUshuaia.agregarActividad("Salto en cascada")
+    packAUshuaia.agregarActividad("Conocer Pingus")
+    packAUshuaia.agregarActividad("Faro fin del Mundo")
+    packAUshuaia.agregarActividad("Conocer el Glaciar Vinciguerra")
+    packAUshuaia.agregarBeneficio(beneficio1)
+    packAUshuaia.agregarBeneficio(beneficio2)
+    packAUshuaia.agregarBeneficio(beneficio3)
+    assert.equals(packAUshuaia.valorFinal(),682500 )
+    
+  }
+  test "El precio final a Msiones sin ser premium" {
+    packMisiones.agregarActividad("Conocer Cataratas")
+    packMisiones.agregarActividad("Lancha a garganta del diablo")
+    packMisiones.agregarActividad("Conocer brasil")
+    packMisiones.agregarBeneficio(beneficio4)
+    packMisiones.agregarBeneficio(beneficio5)
+    packMisiones.agregarBeneficio(beneficio6)
+    assert.equals(packMisiones.valorFinal(),400000)
+    
+  }
+}
